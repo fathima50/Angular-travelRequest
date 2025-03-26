@@ -51,7 +51,7 @@ ngOnInit(): void {
   this.fetchTravelRequests();
   setTimeout(() => {
     console.log("Final Travel Requests:", this.travelRequests);
-  }, 2000); // ✅ Ensures it has time to fetch // Call API to get travel requests
+  }, 2000); // 
 }
 
 
@@ -103,7 +103,6 @@ submitRequest() {
     formData.start_date = this.formatDate(formData.start_date);
     formData.end_date = this.formatDate(formData.end_date);
 
-    console.log("🔹 Sending Data to Django:", formData);  // ✅ Debugging Step
 
     this.travelRequestViewService.createTravelRequest(formData).subscribe({
       next: () => {
@@ -112,8 +111,7 @@ submitRequest() {
         this.fetchTravelRequests();
       },
       error: (error) => {
-        alert('Failed to submit request');
-        console.error("❌ Submission Error:", error); 
+        alert('Failed to submit request'); 
       }
     });
   }
@@ -130,9 +128,9 @@ formatDate(date: any): string {
 fetchTravelRequests(): void {
   this.travelRequestViewService.getEmployeeTravelRequests().subscribe({
     next: (response: any) => {
-      console.log("API Response:", response); // ✅ Ensure it's an array
+      console.log("API Response:", response);
       if (Array.isArray(response)) {
-        this.travelRequests = response; // ✅ Set only if it's an array
+        this.travelRequests = response; 
       } else {
         console.error("Invalid API response format:", response);
         this.travelRequests = []; // Ensure it doesn't break the template
