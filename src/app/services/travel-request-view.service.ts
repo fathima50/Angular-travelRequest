@@ -38,7 +38,7 @@ export class TravelRequestViewService {
 
   //create new travel request
   createTravelRequest(requestData: any): Observable<any> {
-    const token = localStorage.getItem('access_token'); // ✅ Ensure the token is present
+    const token = localStorage.getItem('access_token');
     const headers = new HttpHeaders({ 'Authorization': `Token ${token}` });
 
     return this.http.post('http://127.0.0.1:8000/api/travel-requests/', requestData, {headers})
