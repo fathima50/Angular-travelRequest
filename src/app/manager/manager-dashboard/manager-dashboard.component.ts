@@ -77,7 +77,7 @@ export class ManagerDashboardComponent implements OnInit {
   }
 
   fetchTravelRequestsFilter() {
-    const filters = this.filterForm.value; // ✅ Use filterForm.value
+    const filters = this.filterForm.value;
     this.travelRequestService.getManagerRequestsFilter(filters).subscribe({
       next: (data: any) => {
         console.log(data)
