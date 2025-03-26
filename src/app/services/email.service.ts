@@ -13,7 +13,7 @@ export class EmailService {
   constructor(private http: HttpClient) {}
 
   sendEmail(requestId: number, adminNotes: string): Observable<any> {
-    const token = localStorage.getItem('access_token'); // ✅ Ensure the token is present
+    const token = localStorage.getItem('access_token'); 
     const headers = new HttpHeaders({ 'Authorization': `Token ${token}` });
     const url = `${this.apiUrl}/travel-request/${requestId}/send-email/`;
     return this.http.post(url, { admin_notes: adminNotes },{headers});
