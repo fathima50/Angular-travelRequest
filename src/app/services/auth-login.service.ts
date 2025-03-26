@@ -11,7 +11,6 @@ export class AuthLoginService {
   constructor(private http: HttpClient) {}
 
   login(username: string, password: string, role: string): Observable<any> {
-    console.log("📢 Sending Login Request:", { username, password }); // ✅ Role removed
     return this.http.post<any>(this.apiUrl, { username, password, role });
   }
 
