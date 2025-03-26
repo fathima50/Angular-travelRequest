@@ -1,0 +1,62 @@
+<app-navbar></app-navbar>
+<div class="container mt-4">
+  <h2>Create New Travel Request</h2>
+
+  <form [formGroup]="travelRequestForm" (ngSubmit)="submitRequest()">
+    <div class="mb-3">
+      <label for="fromLocation" class="form-label">From Location</label>
+      <input type="text" id="fromLocation" class="form-control" formControlName="fromLocation" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="toLocation" class="form-label">To Location</label>
+      <input type="text" id="toLocation" class="form-control" formControlName="toLocation" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="travelMode" class="form-label">Preferred Travel Mode</label>
+      <select id="travelMode" class="form-select" formControlName="travelMode" required>
+        <option value="">Select Mode</option>
+        <option value="Flight">Flight</option>
+        <option value="Train">Train</option>
+        <option value="Bus">Bus</option>
+      </select>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label for="travelFromDate" class="form-label">Travel From Date</label>
+        <input type="date" id="travelFromDate" class="form-control" formControlName="travelFromDate" required>
+      </div>
+
+      <div class="col-md-6 mb-3">
+        <label for="travelToDate" class="form-label">Travel To Date</label>
+        <input type="date" id="travelToDate" class="form-control" formControlName="travelToDate" required>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label for="additionalRequests" class="form-label">Additional Requests</label>
+      <textarea id="additionalRequests" class="form-control" formControlName="additionalRequests"></textarea>
+    </div>
+
+    <div class="mb-3 form-check">
+      <input type="checkbox" id="isLodgingRequired" class="form-check-input" formControlName="isLodgingRequired">
+      <label for="isLodgingRequired" class="form-check-label">Is Lodging Required?</label>
+    </div>
+
+    <div class="mb-3" *ngIf="travelRequestForm.get('isLodgingRequired')?.value">
+      <label for="lodgingLocation" class="form-label">Preferred Lodging Location</label>
+      <input type="text" id="lodgingLocation" class="form-control" formControlName="lodgingLocation">
+    </div>
+
+    <div class="mb-3">
+      <label for="purposeOfTravel" class="form-label">Purpose of Travel</label>
+      <input type="text" id="purposeOfTravel" class="form-control" formControlName="purposeOfTravel" required>
+    </div>
+
+    <button type="submit" class="btn btn-primary" [disabled]="!travelRequestForm.valid">
+      Submit Request
+    </button>
+  </form>
+</div>

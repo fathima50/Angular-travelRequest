@@ -1,0 +1,205 @@
+<div class="container mt-4">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <!-- Left Side: App Title -->
+      <a class="navbar-brand">Travel Requests</a>
+      <!-- "Create New Request" Button -->
+      <!-- Right Side: Logout Button -->
+      <button class="btn btn-danger ms-auto" (click)="logout()">Logout</button>
+    </div>
+  </nav>
+  
+  <!-- Employee Details -->
+  <div class="card mb-4 mt-4">
+    <div class="card-header bg-primary text-white">
+      Employee Details
+    </div>
+    <div class="card-body">
+      <p><strong>Name:</strong> {{ employee.name }}</p>
+      <p><strong>Email:</strong> {{ employee.email }}</p>
+      <p><strong>Status:</strong> {{ employee.status }}</p>
+      <p *ngIf="employee.manager_id"><strong>Manager ID:</strong> {{ employee.manager_id }}</p>
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-center flex-grow-1">
+    <button class="btn btn-success mb-3" (click)="showRequestForm = !showRequestForm">
+      {{ showRequestForm ? 'Cancel' : 'Create New Request' }}
+    </button>
+  </div>
+
+  <!-- Travel Requests -->
+  <h3>Your Travel Requests</h3>
+  <!-- <div *ngIf="travelRequests.length > 0; else noRequests"> -->
+  <div>
+
+  
+    <div *ngIf="showRequestForm" class="card shadow-lg p-3">
+      <div class="card-header bg-primary text-white">
+        <h3 class="mb-0">New Travel Request</h3>
+      </div>
+      <div class="card-body">
+        <form [formGroup]="travelRequestForm" (ngSubmit)="submitRequest()">
+          <div class="mb-3">
+            <label class="form-label">From Location</label>
+            <input type="text" class="form-control" formControlName="from_location" required>
+          </div>
+    
+          <div class="mb-3">
+            <label class="form-label">To Location</label>
+            <input type="text" class="form-control" formControlName="to_location" required>
+          </div>
+    
+          <div class="mb-3">
+            <label class="form-label">Travel Mode</label>
+            <select class="form-control" formControlName="travel_mode">
+              <option value="Plane">Plane</option>
+              <option value="Train">Train</option>
+              <option value="Car">Car</option>
+            </select>
+          </div>
+    
+          <div class="mb-3">
+            <label class="form-label">Start Date</label>
+            <input type="date" class="form-control" formControlName="start_date" required>
+          </div>
+    
+          <div class="mb-3">
+            <label class="form-label">End Date</label>
+            <input type="date" class="form-control" formControlName="end_date" required>
+          </div>
+    
+          <div class="mb-3">
+            <label class="form-label">Purpose of Travel</label>
+            <textarea class="form-control" formControlName="purpose_of_travel"></textarea>
+          </div>
+    
+          <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" formControlName="lodging_required">
+            <label class="form-check-label">Lodging Required</label>
+          </div>
+    
+          <div class="mb-3">
+            <label class="form-label">Lodging Location</label>
+            <textarea class="form-control" formControlName="lodging_location"></textarea>
+          </div>
+    
+          <div class="d-grid">
+            <button type="submit" class="btn btn-primary">Submit Request</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    
+<!-- table showing past requests -->
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Date of Request</th>
+          <th>From</th>
+          <th>To</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let request of travelRequests">
+          <td>{{ request.date_of_request }}</td>
+          <td>{{ request.from_location }}</td>
+          <td>{{ request.to_location }}</td>
+          <td>{{ request.status }}</td>
+          <td>
+            <button class="btn btn-primary" (click)="viewDetails(request)" data-bs-toggle="modal" data-bs-target="#requestModal">
+              View
+            </button>
+
+            <button *ngIf="request.status === 'Pending' || request.status === 'update request'" 
+              class="btn btn-danger ms-2" (click)="cancelRequest(request.id)">
+              Cancel
+            </button> 
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+  <ng-template #noRequests>
+    <p>No travel requests found.</p>
+  </ng-template>
+</div>
+
+<!-- Modal -->
+ <!-- Modal for Viewing Request Details -->
+<div *ngIf="selectedRequest" class="modal fade show d-block" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Travel Request Details</h5>
+        <button type="button" class="btn-close" (click)="selectedRequest = null"></button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-body">
+          <!-- Travel Request Details Table -->
+          <table class="table table-bordered">
+            <tbody>
+              <tr>
+                <th>From</th>
+                <td>{{ selectedRequest.from_location }}</td>
+              </tr>
+              <tr>
+                <th>To</th>
+                <td>{{ selectedRequest.to_location }}</td>
+              </tr>
+              <tr>
+                <th>Departure Date</th>
+                <td>{{ selectedRequest.start_date }}</td>
+              </tr>
+              <tr>
+                <th>Return Date</th>
+                <td>{{ selectedRequest.end_date }}</td>
+              </tr>
+              <tr>
+                <th>Travel Mode</th>
+                <td>{{ selectedRequest.travel_mode }}</td>
+              </tr>
+              <tr>
+                <th>Additional Requests</th>
+                <td>{{ selectedRequest.additional_requests }}</td>
+              </tr>
+              <tr>
+                <th>Lodging Required</th>
+                <td>{{ selectedRequest.lodging_required ? 'Yes' : 'No' }}</td>
+              </tr>
+              <tr>
+                <th>Lodging Location</th>
+                <td>{{ selectedRequest.lodging_location }}</td>
+              </tr>
+              <tr>
+                <th>Purpose</th>
+                <td>{{ selectedRequest.purpose_of_travel }}</td>
+              </tr>
+              <tr>
+                <th>Status</th>
+                <td>{{ selectedRequest.status }}</td>
+              </tr>
+              <tr>
+                <th>Manager Notes</th>
+                <td>{{ selectedRequest.manager_notes }}</td>
+              </tr>
+              <tr>
+                <th>Admin Notes</th>
+                <td>{{ selectedRequest.Admin_notes }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="selectedRequest = null">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+

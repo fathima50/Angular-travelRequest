@@ -1,0 +1,14 @@
+.card-header {
+    font-weight: bold;
+    font-size: 1.2rem;
+  }
+  
+  .table th, .table td {
+    vertical-align: middle;
+  }
+  
+  .badge {
+    padding: 0.5em 1em;
+    font-size: 0.9rem;
+  }
+  

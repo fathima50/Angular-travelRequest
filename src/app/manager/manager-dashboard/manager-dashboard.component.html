@@ -1,0 +1,140 @@
+<div class="container mt-4">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <!-- Left Side: App Title -->
+      <a class="navbar-brand">Manager Dashboard</a>
+      <!-- Right Side: Logout Button -->
+      <button class="btn btn-danger ms-auto" (click)="logout()">Logout</button>
+    </div>
+  </nav>
+
+  <!-- Manager Details -->
+  <div class="card mb-4 mt-4">
+    <div class="card-header bg-primary text-white">Manager Details</div>
+    <div class="card-body">
+      <p><strong>Name:</strong> {{ manager.name }}</p>
+      <p><strong>Email:</strong> {{ manager.email }}</p>
+      <p><strong>Status:</strong> {{ manager.status }}</p>
+      <p><strong>ID:</strong> {{ manager.manager_id }}</p>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <form [formGroup]="filterForm" (ngSubmit)="fetchTravelRequestsFilter()" class="mb-3 mt-4 row">
+    <div class="col-md-2">
+      <input type="text" formControlName="employee" class="form-control" placeholder="Employee Name">
+    </div>
+    <!-- <div class="col-md-2">
+      <input type="text" formControlName="manager" class="form-control" placeholder="Manager Name">
+    </div> -->
+    <div class="col-md-2">
+      <input type="date" formControlName="start_date" class="form-control">
+    </div>
+    <div class="col-md-2">
+      <input type="date" formControlName="end_date" class="form-control">
+    </div>
+    <div class="col-md-2">
+      <select formControlName="status" class="form-control">
+        <option value="">All Statuses</option>
+        <option value="Pending">Pending</option>
+        <option value="Approved">Approved</option>
+        <option value="Rejected">Rejected</option>
+        <option value="closed">Closed</option>
+        <option value="cancelled">Cancelled</option>
+      </select>
+    </div>
+    <div class="col-md-2">
+      <button type="submit" class="btn btn-primary">Filter</button>
+    </div>
+  </form>
+
+  <!-- Travel Requests Table -->
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Employee</th>
+        <th>From</th>
+        <th>To</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let request of travelRequests">
+        <td>{{ request.employee.name }}</td>
+        <td>{{ request.from_location }}</td>
+        <td>{{ request.to_location }}</td>
+        <td>{{ request.status }}</td>
+        <td>
+          <button class="btn btn-primary" (click)="viewDetails(request)">View</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Modal for Request Details and Manager Notes -->
+<div *ngIf="selectedRequest" class="modal fade show d-block" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Travel Request Details</h5>
+        <button type="button" class="btn-close" (click)="selectedRequest = null"></button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-body">
+          <!-- Travel Details Table -->
+          <table class="table table-bordered">
+            <tbody>
+              <tr>
+                <th>From</th>
+                <td>{{ selectedRequest.from_location }}</td>
+              </tr>
+              <tr>
+                <th>To</th>
+                <td>{{ selectedRequest.to_location }}</td>
+              </tr>
+              <tr>
+                <th>Departure Date</th>
+                <td>{{ selectedRequest.start_date }}</td>
+              </tr>
+              <tr>
+                <th>Return Date</th>
+                <td>{{ selectedRequest.end_date }}</td>
+              </tr>
+              <tr>
+                <th>Travel Mode</th>
+                <td>{{ selectedRequest.travel_mode }}</td>
+              </tr>
+              <tr>
+                <th>Purpose</th>
+                <td>{{ selectedRequest.purpose_of_travel }}</td>
+              </tr>
+              <tr>
+                <th>Status</th>
+                <td>{{ selectedRequest.status }}</td>
+              </tr>
+              <tr>
+                <th>Admin Notes</th>
+                <td>{{ selectedRequest.Admin_notes }}</td>
+              </tr>
+              <tr>
+                <th>Manager Notes</th>
+                <td>{{ selectedRequest.manager_notes }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <form [formGroup]="managerNotesForm">
+          <textarea class="form-control" formControlName="manager_notes" placeholder="Add manager notes"></textarea>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button *ngIf="selectedRequest.status === 'Pending'" class="btn btn-success" (click)="approveRequest(selectedRequest.id)">Approve</button>
+        <button *ngIf="selectedRequest.status === 'Pending'" class="btn btn-danger" (click)="rejectRequest(selectedRequest.id)">Reject</button>
+        <button *ngIf="selectedRequest.status === 'Pending'" class="btn btn-primary" (click)="saveManagerNotes(selectedRequest)">Request Info</button>
+        <button class="btn btn-secondary" (click)="selectedRequest = null">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
